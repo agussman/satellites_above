@@ -1,7 +1,7 @@
 stub: This is a stub response.
 sats_above: There are {{ sat_count }} satellites above you in {{ city }}!
-card_title: What's up? Satellite Pass
+card_title: Satellites Above
 help: You can ask me about the next pass through of a satellite.
 bye: Goodbye
-fallback_address: You have refused to allow Satellite Pass access to the address information in the Alexa app. Satellite Pass cannot function without address information. To permit access to address information, consent to provide address information in the Alexa app.
+fallback_address: You have refused to allow Satellites Above access to the address information in the Alexa app. Satellites Above cannot function without address information. To permit access to address information, consent to provide address information in the Alexa app.
 other_failure: An unknown failure occured when looking up your geolocation. Please contact the maintainer of this app.

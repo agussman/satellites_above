@@ -56,7 +56,7 @@ def get_fake_count(lat, lon):
     return 101
 
 def get_coordinates(location):
-    geolocator = Nominatim(user_agent="Satellite Pass")    # Set provider of geo-data 
+    geolocator = Nominatim(user_agent="Satellites Above")    # Set provider of geo-data 
     # address = "{}, {}".format(location["addressLine1"].encode("utf-8"),
     #                           location["city"].encode("utf-8"))
     
