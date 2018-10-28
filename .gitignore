@@ -1,1 +1,4 @@
 .vscode/*
+config/*
+__pycache__/
+zappa_settings.json

@@ -11,7 +11,9 @@ Mostly selected the defaults, although I did tell it to use the `zappa-deploy` c
 
 $ zappa deploy dev
 
+Don't track `zappa_settings.json`. Add it to `.gitignore`. Remove it with
 
+$ git rm --cached zappa_settings.json
 
 
 
@@ -44,3 +46,5 @@ Fixed it by specifically installing the latest versino of `flask-ask`:
 # References
 
 * https://developer.amazon.com/blogs/alexa/post/8e8ad73a-99e9-4c0f-a7b3-60f92287b0bf/new-alexa-tutorial-deploy-flask-ask-skills-to-aws-lambda-with-zappa
+* https://www.n2yo.com/api/
+* https://github.com/dronir/N2YOtools

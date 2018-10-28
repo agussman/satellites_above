@@ -5,6 +5,7 @@ from random import randint
 from flask import Flask, render_template
 from flask_ask import Ask, request, session, question, statement
 
+from satellite_pass import get_sats_above, get_fake_count
 
 app = Flask(__name__)
 ask = Ask(app, "/")
@@ -16,7 +17,11 @@ def launch():
 
 @ask.intent('NextSatellitePass')
 def next_satellite_pass():
-    speech_text = render_template('stub')
+
+    sat_count = get_sats_above(38.99651, -77.320582)
+    #sat_count = get_fake_count(38.99651, -77.320582)
+    #speech_text = render_template('stub')
+    speech_text = render_template('sats_above', sat_count=sat_count)
     card_title = render_template('card_title')
     return statement(speech_text).simple_card(card_title, speech_text)
 
