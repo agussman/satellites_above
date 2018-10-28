@@ -1,4 +1,5 @@
 stub: This is a stub response.
+sats_above: There are {{ sat_count }} satellites above you!
 card_title: What's up? Satellite Pass
 help: You can ask me about the next pass through of a satellite.
 bye: Goodbye
