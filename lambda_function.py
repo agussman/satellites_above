@@ -1,15 +1,57 @@
 import logging
 import os
-from random import randint
+import requests
 
 from flask import Flask, render_template
-from flask_ask import Ask, request, session, question, statement
+from flask_ask import Ask, request, session, question, statement, context
 
-from satellite_pass import get_sats_above, get_fake_count
+from satellite_pass import get_sats_above, get_fake_count, get_coordinates
 
 app = Flask(__name__)
 ask = Ask(app, "/")
 logging.getLogger('flask_ask').setLevel(logging.DEBUG)
+
+#
+# Skill support
+#
+
+def get_alexa_location():
+    # Get deviceId and accessToken
+    deviceId = context.System.device.deviceId
+    print("deviceId: {}".format(deviceId))
+    accessToken = context.System.apiAccessToken
+    print("accessToken: {}".format(accessToken))
+
+    URL =  "https://api.amazonalexa.com/v1/devices/{}/settings" \
+           "/address".format(deviceId)
+    #TOKEN =  context.System.user.permissions.consentToken
+    TOKEN = accessToken
+    HEADER = {'Accept': 'application/json',
+             'Authorization': 'Bearer {}'.format(TOKEN)}
+    r = requests.get(URL, headers=HEADER)
+    if r.status_code == 200:
+        return(r.json())
+    elif r.status_code == 403:
+        # User hasn't enabled Address permissions
+        return( { "FAIL": "FORBIDDEN" })
+    else:
+        print("status code: {}".format(r.status_code))
+        return( { "FAIL": "OTHER"} )
+
+def handle_forbidden():
+    speech_text = render_template('fallback_address')
+    card_title = render_template('card_title')
+    return statement(speech_text).simple_card(card_title, speech_text)
+
+def handle_other_failure():
+    speech_text = render_template('other_failure')
+    card_title = render_template('card_title')
+    return statement(speech_text).simple_card(card_title, speech_text)
+
+#
+# Skill functionality
+#
+
 
 @ask.launch
 def launch():
@@ -17,11 +59,21 @@ def launch():
 
 @ask.intent('NextSatellitePass')
 def next_satellite_pass():
+    location = get_alexa_location()
+    # Test if request failed
+    if "FAIL" in location:
+        if location["FAIL"] == "FORBIDDEN":
+            return handle_forbidden()
+        else:
+            return handle_other_failure()
 
-    sat_count = get_sats_above(38.99651, -77.320582)
-    #sat_count = get_fake_count(38.99651, -77.320582)
-    #speech_text = render_template('stub')
-    speech_text = render_template('sats_above', sat_count=sat_count)
+    print("location: {}".format(location))
+
+    coordinates = get_coordinates(location)
+
+    # sat_count = get_sats_above(38.99651, -77.320582)
+    sat_count = get_sats_above(coordinates.latitude, coordinates.longitude)
+    speech_text = render_template('sats_above', sat_count=sat_count, city=location['city'])
     card_title = render_template('card_title')
     return statement(speech_text).simple_card(card_title, speech_text)
 
