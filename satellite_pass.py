@@ -1,6 +1,6 @@
 import requests
 from os import path, environ
-
+from geopy.geocoders import Nominatim
 # A lot of this code was taken from / based on https://github.com/dronir/N2YOtools
 
 BASE_URL = "https://www.n2yo.com/rest/v1/satellite/"
@@ -55,8 +55,37 @@ def get_sats_above(lat, lon):
 def get_fake_count(lat, lon):
     return 101
 
-def z():
-    sat_count = get_sats_above(38.99651, -77.320582)
+def get_coordinates(location):
+    geolocator = Nominatim(user_agent="Satellite Pass")    # Set provider of geo-data 
+    # address = "{}, {}".format(location["addressLine1"].encode("utf-8"),
+    #                           location["city"].encode("utf-8"))
+    
+    address = "{addressLine1} {city}, {stateOrRegion} {postalCode} {countryCode}".format(**location)
+    print(address)
+    coordinates = geolocator.geocode(address)
+    print(coordinates)
+    #print(coordinates.latitude, coordinates.longitude)
 
-    return "There are {} satellites above you!".format(sat_count)
+    return coordinates
+
+def z():
+
+    location = {
+                "stateOrRegion" : "WA",
+                "city" : "Seattle",
+                "countryCode" : "US",
+                "postalCode" : "98109",
+                "addressLine1" : "410 Terry Ave North",
+                "addressLine2" : "",
+                "addressLine3" : "aeiou",
+                "districtOrCounty" : ""
+                }
+
+
+    coordinates = get_coordinates(location)
+
+    # sat_count = get_sats_above(38.99651, -77.320582)
+    sat_count = get_sats_above(coordinates.latitude, coordinates.longitude)
+
+    return "There are {} satellites above you in {}!".format(sat_count, location['city'])
 
