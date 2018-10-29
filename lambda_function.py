@@ -71,9 +71,14 @@ def next_satellite_pass():
 
     coordinates = get_coordinates(location)
 
-    # sat_count = get_sats_above(38.99651, -77.320582)
     sat_count = get_sats_above(coordinates.latitude, coordinates.longitude)
-    speech_text = render_template('sats_above', sat_count=sat_count, city=location['city'])
+
+    # Handle partial address info
+    loc_string = location['city']
+    if loc_string is None or loc_string == "":
+        loc_string = location['postalCode']
+
+    speech_text = render_template('sats_above', sat_count=sat_count, city=loc_string)
     card_title = render_template('card_title')
     return statement(speech_text).simple_card(card_title, speech_text)
 
