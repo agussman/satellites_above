@@ -1,5 +1,6 @@
 stub: This is a stub response.
-sats_above: There are {{ sat_count }} satellites above you in {{ city }}!
+sats_above: There are {{ sat_count }} satellites above you in {{ city }}
+sats_above_postal: <speak> There are {{ sat_count }} satellites above you in <say-as interpret-as="digits"> {{ postal }} </say-as> </speak>
 card_title: Satellites Above
 help: You can ask me about the next pass through of a satellite.
 bye: Goodbye

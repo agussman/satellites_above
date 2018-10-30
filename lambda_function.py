@@ -77,8 +77,9 @@ def next_satellite_pass():
     loc_string = location['city']
     if loc_string is None or loc_string == "":
         loc_string = location['postalCode']
-
-    speech_text = render_template('sats_above', sat_count=sat_count, city=loc_string)
+        speech_text = render_template('sats_above_postal', sat_count=sat_count, postal=loc_string)
+    else:
+        speech_text = render_template('sats_above', sat_count=sat_count, city=loc_string)
     card_title = render_template('card_title')
     return statement(speech_text).simple_card(card_title, speech_text)
 
