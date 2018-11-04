@@ -1,4 +1,4 @@
-# satellite_pass
+# Satellites Above
 Alexa skill to tell you the time until the next overhead pass of a satellite
 
 $ pip install flask-ask zappa requests awscli
