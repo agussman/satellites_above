@@ -55,15 +55,25 @@ def get_sats_above(lat, lon):
 def get_fake_count(lat, lon):
     return 101
 
+def dict_none_to_empty_string(d):
+    # Replace all "None" values with an empty string
+    for key, value in d.items():
+        if value is None or value == "None":
+            d[key] = ""
+
+
 def get_coordinates(location):
-    geolocator = Nominatim(user_agent="Satellite Pass")    # Set provider of geo-data 
+
+    dict_none_to_empty_string(location)
+
+    geolocator = Nominatim(user_agent="Satellites Above")    # Set provider of geo-data 
     # address = "{}, {}".format(location["addressLine1"].encode("utf-8"),
     #                           location["city"].encode("utf-8"))
-    
+
     address = "{addressLine1} {city}, {stateOrRegion} {postalCode} {countryCode}".format(**location)
-    print(address)
+    #print(address)
     coordinates = geolocator.geocode(address)
-    print(coordinates)
+    #print(coordinates)
     #print(coordinates.latitude, coordinates.longitude)
 
     return coordinates
@@ -81,11 +91,16 @@ def z():
                 "districtOrCounty" : ""
                 }
 
+    location = {'addressLine1': None, 'addressLine2': None, 'addressLine3': None, 'districtOrCounty': None, 'stateOrRegion': None, 'city': None, 'countryCode': 'US', 'postalCode': '20170'}
 
     coordinates = get_coordinates(location)
 
     # sat_count = get_sats_above(38.99651, -77.320582)
     sat_count = get_sats_above(coordinates.latitude, coordinates.longitude)
 
-    return "There are {} satellites above you in {}!".format(sat_count, location['city'])
+    loc_string = location['city']
+    if loc_string is None or loc_string == "":
+        loc_string = location['postalCode']
+
+    return "There are {} satellites above you in {}!".format(sat_count, loc_string)
 
