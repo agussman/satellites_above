@@ -1,23 +1,48 @@
 # Satellites Above
-Alexa skill to tell you the time until the next overhead pass of a satellite
+Alexa skill to tell you the number of satellites overhead.
 
+[This AWS Blog Post](https://developer.amazon.com/blogs/alexa/post/8e8ad73a-99e9-4c0f-a7b3-60f92287b0bf/new-alexa-tutorial-deploy-flask-ask-skills-to-aws-lambda-with-zappa) is a good introduction to creating an Alexa Skill with Zappa and Lambda.
+
+To get started:
+```
 $ pip install flask-ask zappa requests awscli
+```
 
-Had previously created a `zappa-deploy` IAM user w/ `AdministratorAccess` privledges. Added a section to `~/.aws/credentials`.
+I had previously created a `zappa-deploy` IAM user w/ `AdministratorAccess` privledges. I did add a `[zappa-deploy]` section with the appropriate keys to `~/.aws/credentials`.
 
+```
 $ zappa init
+```
 
-Mostly selected the defaults, although I did tell it to use the `zappa-deploy` config. This creates a zappa_settings.json
+Mostly selected the defaults, although I did tell it to use the `zappa-deploy` config. This creates a `zappa_settings.json`. I don't track this file in git because it contains a sensitive environmental variable. 
 
-$ zappa deploy dev
+What not to do is add it to `.gitignore` and remove it with
 
-Don't track `zappa_settings.json`. Add it to `.gitignore`. Remove it with
-
+```
 $ git rm --cached zappa_settings.json
+```
 
-which will delete it... should have just done
+as this will delete the file... which is wrong, because you need it for zappa to run.
 
+I should have just done:
+
+```
 $ git update-index --assume-unchanged zappa_settings.json
+```
+
+I order to supply the N2YO api key in a marginally secure manner, I added it as an environment variable that is set via the `zappa_settings.json` ([instructions](https://github.com/Miserlou/Zappa#setting-environment-variables)):
+
+```
+        "environment_variables": {
+            "N2YO_API_KEY": "KEYVALUE"
+        }
+```
+
+To actually push your endpoint to production:
+
+```
+$ zappa deploy dev
+```
 
 
 
